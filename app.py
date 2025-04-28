@@ -7,7 +7,7 @@ import pickle
 from sklearn.linear_model import LogisticRegression
 
 # Load the trained model
-model = pickle.load(open('model01.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
 
 # Title
 st.title("Logistic Regression Prediction App")
