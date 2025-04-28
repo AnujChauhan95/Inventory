@@ -1,32 +1,44 @@
-# app.py
-
 import streamlit as st
-import pandas as pd
-import numpy as np
 import pickle
-from sklearn.linear_model import LogisticRegression
+import numpy as np
 
-# Load the trained model
-model = pickle.load(open('model.pkl', 'rb'))
+# Load the model
+with open('model.pkl', 'rb') as file:
+    model = pickle.load(file)
 
-# Title
-st.title("Logistic Regression Prediction App")
+# App Title
+st.title("Sales Prediction App")
 
-st.write("""
-### Enter the details below to get a prediction
-""")
+st.header("Input the feature values:")
 
-# Assuming you have 4 features (update according to your model!)
-feature1 = st.number_input('Feature 1', min_value=0.0, max_value=1000.0, value=0.0)
-feature2 = st.number_input('Feature 2', min_value=0.0, max_value=1000.0, value=0.0)
-feature3 = st.number_input('Feature 3', min_value=0.0, max_value=1000.0, value=0.0)
-feature4 = st.number_input('Feature 4', min_value=0.0, max_value=1000.0, value=0.0)
+# Input fields for each feature
+Category_Electronics = st.selectbox('Is the Category Electronics?', [0, 1])
+Category_Furniture = st.selectbox('Is the Category Furniture?', [0, 1])
+Region_South = st.selectbox('Is the Region South?', [0, 1])
+Region_West = st.selectbox('Is the Region West?', [0, 1])
+Weather_Rainy = st.selectbox('Is the Weather Rainy?', [0, 1])
+Weather_Sunny = st.selectbox('Is the Weather Sunny?', [0, 1])
+Seasonality_Summer = st.selectbox('Is the Seasonality Summer?', [0, 1])
 
-# Prepare input data
-input_data = np.array([[feature1, feature2, feature3, feature4]])
+Inventory = st.number_input('Enter Inventory value')
+Revenue = st.number_input('Enter Revenue value')
+Sales = st.number_input('Enter Sales value')
 
 # Predict button
 if st.button('Predict'):
+    # Prepare input in the correct order
+    input_data = np.array([[Category_Electronics, Category_Furniture, Region_South,
+                            Region_West, Weather_Rainy, Weather_Sunny, Seasonality_Summer,
+                            Inventory, Revenue, Sales]])
+    
+    # Prediction
     prediction = model.predict(input_data)
-    st.success(f'The prediction is: {prediction[0]}')
+    
+    # Display the result
+    st.success(f"The predicted value is: {prediction[0]:.2f}")
 
+# Footer
+st.markdown("""
+    <hr>
+    <small>Developed with ❤️ using Streamlit</small>
+""", unsafe_allow_html=True)
