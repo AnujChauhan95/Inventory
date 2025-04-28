@@ -22,13 +22,12 @@ Weather_Sunny = st.selectbox('Is the Weather Sunny?', [0, 1])
 Seasonality_Summer = st.selectbox('Is the Seasonality Summer?', [0, 1])
 Seasonality_Winter = st.selectbox('Is the Seasonality Winter?', [0, 1])
 Promotion_True = st.selectbox('Is the Promotion True?', [0, 1])
-Price = st.selectbox('Is the Price?', [0, 1])
 
 
 Inventory = st.number_input('Enter Inventory value', min_value=0.0)
+Price = st.number_input('Enter Price value', min_value=0.0)
 Revenue = st.number_input('Enter Revenue value', min_value=0.0)
 Sales = st.number_input('Enter Sales value', min_value=0.0)
-Inventory = st.number_input('Enter Inventory value', min_value=0.0)
 Competitor_Pricing = st.number_input('Enter Competitor_Pricing value', min_value=0.0)
 Orders = st.number_input('Enter Orders value', min_value=0.0)
 Discount = st.number_input('Enter Discount value', min_value=0.0)
@@ -36,9 +35,10 @@ Discount = st.number_input('Enter Discount value', min_value=0.0)
 
 # Prediction
 if st.button('Predict'):
-    input_data = np.array([[Category_Electronics, Category_Furniture, Region_South,
-                            Region_West, Weather_Rainy, Weather_Sunny, Seasonality_Summer,
-                            Inventory, Revenue, Sales]])
+    input_data = np.array([['Weather_Rainy', 'Region_South', 'Revenue', 'Sales',
+       'Seasonality_Winter', 'Region_West', 'Weather_Sunny', 'Promotion_True',
+       'Seasonality_Summer', 'Competitor_Pricing', 'Orders', 'Discount',
+       'Inventory', 'Category_Electronics', 'Price', 'Category_Furniture']])
     
     prediction = model.predict(input_data)
     st.success(f"The predicted value is: {prediction[0]:.2f}")
