@@ -20,10 +20,19 @@ Region_West = st.selectbox('Is the Region West?', [0, 1])
 Weather_Rainy = st.selectbox('Is the Weather Rainy?', [0, 1])
 Weather_Sunny = st.selectbox('Is the Weather Sunny?', [0, 1])
 Seasonality_Summer = st.selectbox('Is the Seasonality Summer?', [0, 1])
+Seasonality_Winter = st.selectbox('Is the Seasonality Winter?', [0, 1])
+Promotion_True = st.selectbox('Is the Promotion True?', [0, 1])
+Price = st.selectbox('Is the Price?', [0, 1])
+
 
 Inventory = st.number_input('Enter Inventory value', min_value=0.0)
 Revenue = st.number_input('Enter Revenue value', min_value=0.0)
 Sales = st.number_input('Enter Sales value', min_value=0.0)
+Inventory = st.number_input('Enter Inventory value', min_value=0.0)
+Competitor_Pricing = st.number_input('Enter Competitor_Pricing value', min_value=0.0)
+Orders = st.number_input('Enter Orders value', min_value=0.0)
+Discount = st.number_input('Enter Discount value', min_value=0.0)
+ 
 
 # Prediction
 if st.button('Predict'):
