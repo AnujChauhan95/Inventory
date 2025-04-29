@@ -1,55 +1,59 @@
 import streamlit as st
-import pickle
 import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.ensemble import RandomForestRegressor
 
-# Load the model
-with open('model.pkl', 'rb') as file:
-    model_data = pickle.load(file)
-    model = model_data['model']  # extract 'model' from dict
+st.title("Petroleum Revenue Prediction App")
 
-# App Title
-st.title("Sales Prediction App")
+st.header("Enter Feature Values")
 
-st.header("Input the feature values:")
+# Input fields for categorical features
+land_class = st.selectbox("Land Class", ['Federal', 'Private', 'State'])  # Example options
+land_category = st.selectbox("Land Category", ['Onshore', 'Offshore'])
+state = st.selectbox("State", ['Texas', 'Alaska', 'California'])  # Add actual state list
+revenue_type = st.selectbox("Revenue Type", ['Royalty', 'Bonus', 'Rent'])
+lease_type = st.selectbox("Mineral Lease Type", ['Competitive', 'Non-Competitive'])
+commodity = st.selectbox("Commodity", ['Oil', 'Gas', 'Coal'])
+county = st.selectbox("County", ['County A', 'County B', 'County C'])  # Replace with real counties
+product = st.selectbox("Product", ['Crude Oil', 'Natural Gas', 'NGL'])  # Example options
 
-# Input fields
-Category_Electronics = int(st.selectbox('Is the Category Electronics?', [0, 1]))
-Category_Furniture = int(st.selectbox('Is the Category Furniture?', [0, 1]))
-Region_South = int(st.selectbox('Is the Region South?', [0, 1]))
-Region_West = int(st.selectbox('Is the Region West?', [0, 1]))
-Weather_Rainy = int(st.selectbox('Is the Weather Rainy?', [0, 1]))
-Weather_Sunny = int(st.selectbox('Is the Weather Sunny?', [0, 1]))
-Seasonality_Summer = int(st.selectbox('Is the Seasonality Summer?', [0, 1]))
-Seasonality_Winter = int(st.selectbox('Is the Seasonality Winter?', [0, 1]))
-Promotion_True = int(st.selectbox('Is the Promotion True?', [0, 1]))
+# Build input DataFrame
+input_dict = {
+    'Land Class': land_class,
+    'Land Category': land_category,
+    'State': state,
+    'Revenue Type': revenue_type,
+    'Mineral Lease Type': lease_type,
+    'Commodity': commodity,
+    'County': county,
+    'Product': product
+}
+input_df = pd.DataFrame([input_dict])
 
-Inventory = st.number_input('Enter Inventory value', min_value=0.0)
-Price = st.number_input('Enter Price value', min_value=0.0)
-Revenue = st.number_input('Enter Revenue value', min_value=0.0)
-Sales = st.number_input('Enter Sales value', min_value=0.0)
-Competitor_Pricing = st.number_input('Enter Competitor Pricing value', min_value=0.0)
-Orders = st.number_input('Enter Orders value', min_value=0.0)
-Discount = st.number_input('Enter Discount value', min_value=0.0)
+# Dummy prediction function
+def dummy_model_predict(df):
+    # Encode categorical variables
+    for col in df.columns:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+    
+    # Scale features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(df)
+    
+    # Dummy model (you will replace this with a real trained model)
+    model = RandomForestRegressor()
+    model.fit(X_scaled, [100000])  # Dummy target
+    prediction = model.predict(X_scaled)
+    return prediction[0]
 
 # Prediction
-if st.button('Predict'):
-    # Correct order of inputs
-    input_data = np.array([[Weather_Rainy, Region_South, Revenue, Sales,
-                            Seasonality_Winter, Region_West, Weather_Sunny, Promotion_True,
-                            Seasonality_Summer, Competitor_Pricing, Orders, Discount,
-                            Inventory, Category_Electronics, Price, Category_Furniture]])
-    
-    # Convert to float
-    input_data = input_data.astype(float)
+if st.button("Predict Revenue"):
+    prediction = dummy_model_predict(input_df)
+    st.success(f"Estimated Revenue: ${prediction:,.2f}")
 
-    # Predict
-    prediction = model.predict(input_data)
-
-    # Display the prediction
-    st.success(f"The predicted value is: {prediction[0]:.2f}")
-
-# Footer
 st.markdown("""
-    <hr>
-    <small>Developed with ❤️ using Streamlit</small>
+<hr>
+<small>Developed with ❤️ using Streamlit</small>
 """, unsafe_allow_html=True)
