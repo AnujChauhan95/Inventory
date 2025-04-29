@@ -1,56 +1,57 @@
+
 import streamlit as st
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.ensemble import RandomForestRegressor
+
+# Load trained model and preprocessors (mock for now)
+# In production, replace with: pickle.load(open("model.pkl", "rb"))
 
 st.title("Petroleum Revenue Prediction App")
 
 st.header("Enter Feature Values")
 
-# Input fields for categorical features
-land_class = st.selectbox("Land Class", ['Federal', 'Private', 'State'])  # Example options
-land_category = st.selectbox("Land Category", ['Onshore', 'Offshore'])
-state = st.selectbox("State", ['Texas', 'Alaska', 'California'])  # Add actual state list
-revenue_type = st.selectbox("Revenue Type", ['Royalty', 'Bonus', 'Rent'])
-lease_type = st.selectbox("Mineral Lease Type", ['Competitive', 'Non-Competitive'])
-commodity = st.selectbox("Commodity", ['Oil', 'Gas', 'Coal'])
-county = st.selectbox("County", ['County A', 'County B', 'County C'])  # Replace with real counties
-product = st.selectbox("Product", ['Crude Oil', 'Natural Gas', 'NGL'])  # Example options
+# Input fields for each feature
+land_class = st.selectbox("Land Class", ["Federal", "Private", "State"])
+land_category = st.selectbox("Land Category", ["Onshore", "Offshore"])
+state = st.selectbox("State", ["Texas", "Alaska", "California"])  # example states
+revenue_type = st.selectbox("Revenue Type", ["Royalty", "Bonus", "Rent"])
+lease_type = st.selectbox("Mineral Lease Type", ["Competitive", "Non-Competitive"])
+commodity = st.selectbox("Commodity", ["Oil", "Gas", "Coal"])
+county = st.selectbox("County", ["County A", "County B", "County C"])  # example counties
+product = st.selectbox("Product", ["Crude Oil", "Natural Gas", "NGL"])
 
-# Build input DataFrame
-input_dict = {
-    'Land Class': land_class,
-    'Land Category': land_category,
-    'State': state,
-    'Revenue Type': revenue_type,
-    'Mineral Lease Type': lease_type,
-    'Commodity': commodity,
-    'County': county,
-    'Product': product
-}
-input_df = pd.DataFrame([input_dict])
+# Collect input in a DataFrame
+input_data = pd.DataFrame([{
+    "Land Class": land_class,
+    "Land Category": land_category,
+    "State": state,
+    "Revenue Type": revenue_type,
+    "Mineral Lease Type": lease_type,
+    "Commodity": commodity,
+    "County": county,
+    "Product": product
+}])
 
-# Dummy prediction function
+# Dummy prediction function for demo purposes
 def dummy_model_predict(df):
-    # Encode categorical variables
     for col in df.columns:
         le = LabelEncoder()
         df[col] = le.fit_transform(df[col])
     
-    # Scale features
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(df)
+    df_scaled = scaler.fit_transform(df)
     
-    # Dummy model (you will replace this with a real trained model)
+    # Dummy model
+    from sklearn.ensemble import RandomForestRegressor
     model = RandomForestRegressor()
-    model.fit(X_scaled, [100000])  # Dummy target
-    prediction = model.predict(X_scaled)
-    return prediction[0]
+    model.fit(df_scaled, [123456.78])
+    return model.predict(df_scaled)[0]
 
-# Prediction
+# Predict and display
 if st.button("Predict Revenue"):
-    prediction = dummy_model_predict(input_df)
+    prediction = dummy_model_predict(input_data)
     st.success(f"Estimated Revenue: ${prediction:,.2f}")
 
 st.markdown("""
